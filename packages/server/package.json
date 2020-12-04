@@ -1,0 +1,23 @@
+{
+  "name": "agaricus-server",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage --watch"
+  },
+  "jest": {
+    "transform": {}
+  },
+  "dependencies": {
+    "fastify": "^3.9.1",
+    "fastify-multipart": "^3.3.1",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.6"
+  }
+}
