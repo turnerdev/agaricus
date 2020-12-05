@@ -1,17 +1,39 @@
-import { jest } from '@jest/globals';
-import server from '../src/server.js'
+import Server from '../src/server.js'
+import mockDatabase from '../src/database.js'
 
-describe('Test API server', () => {
+const mockGetAll = jest.fn().mockResolvedValue([1, 2, 3])
 
-  it('Test sample route', async () => {
-    const app = server()
-    
+jest.mock('../src/database.js')
+jest.mock('../src/transaction.js', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      getAll: mockGetAll
+    }
+  })
+})
+
+let app
+
+describe('Test server API', () => {
+
+  beforeEach(() => {
+    jest.restoreAllMocks()
+    app = Server()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  })
+
+  it('Get transactions', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/test'
+      url: '/transactions'
     })
 
-    expect(response.json()).toStrictEqual({ hello: 'world' })
+    expect(mockDatabase).toBeCalled()
+    expect(mockGetAll).toBeCalledTimes(1)
+    expect(response.json()).toStrictEqual([1, 2, 3])
   })
 
 })

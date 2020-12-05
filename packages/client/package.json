@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --coverage --passWithNoTests --watch",
+    "test": "jest --coverage --watch",
+    "atest": "node node_modules/.bin/jest --coverage --watch",
     "start": "parcel serve src/index.html --port 8000",
     "clean": "rm -rf .parcel-cache dist"
   },

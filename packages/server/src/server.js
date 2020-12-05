@@ -1,15 +1,21 @@
 import Fastify from 'fastify'
 import fastifyMultipart from 'fastify-multipart'
 
-const server = (options) => {
-  const fastify = Fastify(options)
+import Database from './database.js'
+import Transaction from './transaction.js'
 
-  fastify.get('/test', async (request, response) => {
+const server = (options) => {
+  const app = Fastify(options)
+  const database = new Database('test')
+  const transaction = new Transaction(database)
+  // database.setup()
+
+  app.get('/transactions', async(request, response) => {
     response.type('application/json').code(200)
-    return { hello: 'world' }
+    return transaction.getAll() 
   })
 
-  return fastify
+  return app
 }
 
 export default server
