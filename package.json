@@ -7,7 +7,8 @@
   "scripts": {
     "lerna": "lerna",
     "tests": "yarn lerna -- run test --parallel --no-bail -- --passWithNoTests --runInBand",
-    "start": "yarn lerna -- run start --parallel --no-bail"
+    "start": "yarn lerna -- run start --parallel --no-bail -- --production",
+    "dev": "yarn lerna -- run start --parallel --no-bail -- --production=false"
   },
   "devDependencies": {
     "lerna": "^3.22.1"

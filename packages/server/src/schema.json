@@ -1,0 +1,98 @@
+{
+  "swagger": {
+    "swagger": {
+      "info": {
+        "title": "Agaricus API",
+        "description": "Agaricus server REST documentation",
+        "version": "0.1.0"
+      }
+    },
+    "hiddenTag": "X-HIDDEN",
+    "exposeRoute": true
+  },
+  "shared": [
+    {
+      "$id": "transaction-base",
+      "title": "Base Transaction",
+      "type": "object",
+      "properties": {
+        "category_id": { "type": "integer", "nullable": true },
+        "row": { "type": "string" },
+        "date": { "type": "integer" },
+        "account": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" }
+      }
+    },
+    {
+      "$id": "transaction-existing",
+      "title": "Existing Transaction",
+      "type": "object",
+      "allOf": [
+        {
+          "properties": {
+            "id": { "type": "integer" }
+          }
+        },
+        { "$ref": "transaction-base#" }
+      ]
+    },
+    {
+      "$id": "account-base",
+      "title": "Base Account",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "currency": { "type": "string", "minLength": 3, "maxLength": 3 }
+      },
+      "required": ["name", "currency"]
+    },
+    {
+      "$id": "account-existing",
+      "title": "Existing Category",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "id": { "type": "integer" }
+          }
+        },
+        { "$ref": "account-base#" }
+      ]
+    },
+    {
+      "$id": "category-base",
+      "title": "Base Category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    {
+      "$id": "category-existing",
+      "title": "Existing Category",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "id": { "type": "integer" }
+          }
+        },
+        { "$ref": "category-base#" }
+      ]
+    },
+    {
+      "$id": "uploadSchema",
+      "title": "Upload",
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "creation_date": { "type": "integer" },
+        "filename": { "type": "string" }
+      }
+    }
+  ]
+}

@@ -1,12 +1,18 @@
 import Server from './server.js'
 
-const server = Server({
+Server({
   logger: {
     level: 'info'
+  },
+  ajv: {
+    customOptions: {
+      strict: "log",
+      unevaluatedProperties: false
+    }
   }
-})
-
-server.listen(8001, (err, address) => {
-  if (err) throw err
-  server.log.info(`Server listening on ${address}`)
+}).then(server => {
+  server.listen(8001, (err, address) => {
+    if (err) throw err
+    server.log.info(`Server listening on ${address}`)
+  })
 })

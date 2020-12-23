@@ -1,4 +1,4 @@
-import mockDatabase from '../src/database.js'
+import mockDatabase from '../src/utils/database.js'
 import Transaction from '../src/transaction.js'
 
 const mockQuery = jest.fn().mockResolvedValue([1, 2, 3])

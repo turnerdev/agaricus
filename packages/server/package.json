@@ -1,13 +1,14 @@
 {
-  "name": "agaricus-server",
+  "name": "@agaricus/server",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon",
+    "start": "nodemon --experimental-json-modules",
     "testold": "node --experimental-vm-modules node_modules/.bin/jest --coverage --watch",
-    "test": "node node_modules/.bin/jest --coverage --watch"
+    "test": "node node_modules/.bin/jest --coverage --watch",
+    "migrate": "npx knex migrate:up --esm"
   },
   "jest": {
     "transform": {
@@ -25,11 +26,18 @@
         }
       ]
     ],
-    "plugins": ["@babel/plugin-syntax-import-meta"]
+    "plugins": [
+      "@babel/plugin-syntax-import-meta"
+    ]
   },
   "dependencies": {
+    "@agaricus/core": "^1.0.0",
+    "awilix": "^4.3.1",
+    "csv-parse": "^4.14.1",
     "fastify": "^3.9.1",
     "fastify-multipart": "^3.3.1",
+    "fastify-websocket": "^2.0.11",
+    "knex": "^0.21.14",
     "sqlite3": "^5.0.0"
   },
   "devDependencies": {
@@ -37,6 +45,7 @@
     "@babel/plugin-syntax-import-meta": "^7.10.4",
     "@babel/preset-env": "^7.12.7",
     "babel-jest": "^26.6.3",
+    "fastify-swagger": "^3.5.0",
     "jest": "^26.6.3",
     "jest-environment-node": "^26.6.2",
     "nodemon": "^2.0.6"

@@ -7,13 +7,10 @@ describe('AppMain unit tests', () => {
     container = document.createElement('div');
   })
 
-  it('example hybrids test', async () => {
-    const host = { data1: 'hello' }
-    AppMain.data2.connect(host, 'data2');
+  it('Index page test', async () => {
+    const host = { }
     const update = await AppMain.render(host)
 
     await update(host, container)
-
-    expect(container.children[0].textContent).toBe('hello world')
   })
 })
