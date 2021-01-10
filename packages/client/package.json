@@ -6,12 +6,18 @@
   "scripts": {
     "test": "jest --coverage --watch",
     "atest": "node node_modules/.bin/jest --coverage --watch",
-    "start": "parcel serve src/index.html --port 8000",
+    "start": "parcel serve src/index.html --port 8000 --log-level 4",
     "clean": "rm -rf .parcel-cache dist"
   },
   "browserslist": [
     "last 1 Chrome version"
   ],
+  "postcss": {
+    "plugins": {
+      "tailwindcss": {},
+      "autoprefixer": {}
+    }
+  },
   "jest": {
     "transform": {
       ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
@@ -26,9 +32,15 @@
       "@babel/preset-env"
     ]
   },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "arrowParens": "avoid",
+    "singleQuote": true
+  },
   "dependencies": {
     "hybrids": "^4.3.3",
-    "parcel": "^2.0.0-beta.1",
     "tailwindcss": "^2.0.1",
     "ws": "^7.4.1"
   },
@@ -37,8 +49,11 @@
     "@babel/preset-env": "^7.12.7",
     "autoprefixer": "^10.0.4",
     "babel-jest": "^26.6.3",
+    "http-proxy-middleware": "^1.0.6",
     "jest": "^26.6.3",
     "jest-transform-stub": "^2.0.0",
+    "nodemon": "^2.0.7",
+    "parcel": "^2.0.0-beta.1",
     "postcss": "^8.1.14"
   }
 }
