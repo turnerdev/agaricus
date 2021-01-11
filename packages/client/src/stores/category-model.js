@@ -2,7 +2,9 @@ import { store } from 'hybrids'
 import {
   getCategory,
   getCategories,
-  addCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory
 } from '../api/categories-api.js'
 
 const Category = {
@@ -12,11 +14,22 @@ const Category = {
   [store.connect]: {
     get: getCategory,
     set: async (id, values, keys) =>
-      addCategory({
+
+      if (values === null) {
+        await deleteAccount(id)
+        return null
+      } else if (isNaN(values.id)) {
+        const record = (({ id, ...props }) => props)(nValues)
+        await createAccount(record)
+        return null
+      } else {
+        await updateAccount(nValues)
+        return values
+      }
+      createCategory({
         name: values.name,
       }),
     list: getCategories,
   },
 }
 
-export default Category
