@@ -1,0 +1,11 @@
+node_modules
+*.log
+.git
+packages/server/data/*
+packages/server/coverage
+packages/server/node_modules
+packages/client/node_modules
+packages/client/dist
+packages/client/.cache
+packages/client/coverage
+.parcel-cache/
