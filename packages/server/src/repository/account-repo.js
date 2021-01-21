@@ -5,4 +5,8 @@ export default class AccountRepository extends BaseRepository {
     super(accountDao)
     this.accountDao = accountDao
   }
+
+  async find(query) {
+    return this.accountDao.findByQuery(query)
+  }
 }

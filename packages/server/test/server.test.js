@@ -1,39 +1,50 @@
 import Server from '../src/server.js'
-import mockDatabase from '../src/utils/database.js'
-
-const mockGetAll = jest.fn().mockResolvedValue([1, 2, 3])
-
-jest.mock('../src/database.js')
-jest.mock('../src/transaction.js', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      getAll: mockGetAll
-    }
-  })
-})
-
-let app
+import * as fastifyUtils from '../src/utils/fastify'
 
 describe('Test server API', () => {
+  let app
+  let querystringParser
 
-  beforeEach(() => {
+  beforeAll(() => {})
+
+  afterAll(() => {})
+
+  beforeEach(async () => {
     jest.restoreAllMocks()
-    app = Server()
+    querystringParser = jest.spyOn(fastifyUtils, 'querystringParser')
+    app = await Server()
   })
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.clearAllMocks()
   })
 
-  it('Get transactions', async () => {
-    // const response = await app.inject({
-    //   method: 'GET',
-    //   url: '/transactions'
-    // })
-
-    // expect(mockDatabase).toBeCalled()
-    // expect(mockGetAll).toBeCalledTimes(1)
-    // expect(response.json()).toStrictEqual([1, 2, 3])
+  it('Test 404', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/',
+    })
+    await app.close()
+    expect(response.statusCode).toStrictEqual(404)
   })
 
+  it('Test querystring plugin', async () => {
+    const aquerystringParser = jest.spyOn(fastifyUtils, 'querystringParser')
+    const response = await app.inject({
+      method: 'GET',
+      url: '/?param1=[1,2, 3]&param2=1,2,3&param3=[1,2 3]',
+    })
+
+    expect(querystringParser).toHaveBeenCalled()
+    expect(querystringParser).toHaveReturnedWith({
+      param1: [1, 2, 3],
+      param2: '1,2,3',
+      param3: '[1,2 3]',
+    })
+  })
+
+  it('Test database injection', async () => {
+    const db = app.diContainer.resolve('db')
+    expect(db).not.toEqual(null)
+  })
 })

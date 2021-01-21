@@ -5,11 +5,11 @@ export async function getImports() {
   return (await fetch(url)).json()
 }
 
-export async function uploadFiles(files) {
+export async function uploadFiles(accountId, files) {
   const fd = new FormData()
   files.forEach((file, i) => fd.append(`file${i}`, file))
 
-  return (await fetch('/api/upload', {
+  return (await fetch(`${base}/accounts/${accountId}/upload`, {
     method: 'POST',
     body: fd
   })).text()

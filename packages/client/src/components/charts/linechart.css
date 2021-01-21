@@ -1,0 +1,77 @@
+.axis line {
+  stroke: #706f6f;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+.yaxis path,
+.xaxis path {
+  stroke: #706f6f;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+  vector-effect: non-scaling-stroke;
+}
+
+path {
+  stroke-width: 2;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+circle {
+  stroke-width: 0;
+  fill: #ffffff;
+  stroke: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+/* LINE CHART */
+.line-0 path {
+  stroke: #37ed00;
+}
+.line-0 circle {
+  fill: #37ed00;
+}
+.line-1 path {
+  stroke: #ed3700;
+}
+.line-1 circle {
+  fill: #ed3700;
+}
+.line-2 path {
+  stroke: #0037ed;
+}
+.line-2 circle {
+  fill: #0037ed;
+}
+
+.serie_label {
+  fill: #2b2929;
+  font-family: Georgia;
+  font-size: 0.75rem;
+}
+
+.tooltip {
+  position: absolute;
+  display: block;
+  color: white;
+  background-color: #000000;
+  left: -50%;
+  transform: translate(-50%, -100%);
+  max-width: 200px;
+  margin-top: -20px;
+  padding: 5px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 7px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
+}

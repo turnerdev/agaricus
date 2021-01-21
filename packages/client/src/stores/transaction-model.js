@@ -1,9 +1,5 @@
-import { property, store } from 'hybrids'
-import {
-  getTransaction,
-  getTransactions,
-  updateTransaction,
-} from '../api/transactions-api.js'
+import { store } from 'hybrids'
+import { getTransaction, updateTransaction } from '../api/transactions-api.js'
 
 import Category from './category-model'
 
@@ -16,18 +12,17 @@ const Transaction = {
   id: true,
   hash: '',
   date: '',
-  dateString: ({ date }) => new Date(Number(date)).toDateString(),
   amount: 0,
   description: '',
   row: '',
   message: '',
   account_id: -1,
   category_id: -1,
-  // category: store(Category, { id: 'category_id' }),
   ...readonly,
   [store.connect]: {
     get: getTransaction,
     set: async (id, values, keys) => {
+      // Unsaved records will have an alphanumeric GUID
       if (!isNaN(id)) {
         updateTransaction(
           keys.reduce(
@@ -39,10 +34,8 @@ const Transaction = {
           )
         )
       }
-
       return null
     },
-    // list: getTransactions
   },
 }
 

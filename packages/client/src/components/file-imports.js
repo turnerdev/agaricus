@@ -1,7 +1,7 @@
 import { define, html, store } from 'hybrids'
 import style from 'bundle-text:../style.css'
 
-import { FileImport, UploadingFileImport, Transaction }  from '../models/'
+import { FileImport, UploadingFileImport, Transaction }  from '../stores/'
 import { deleteTransactions } from '../api/'
 import Upload from './upload.js'
 

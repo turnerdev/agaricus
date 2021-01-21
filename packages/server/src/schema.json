@@ -16,6 +16,7 @@
       "title": "Base Transaction",
       "type": "object",
       "properties": {
+        "account_id": { "type": "integer" },
         "category_id": { "type": "integer", "nullable": true },
         "row": { "type": "string" },
         "date": { "type": "integer" },
@@ -49,7 +50,7 @@
     },
     {
       "$id": "account-existing",
-      "title": "Existing Category",
+      "title": "Existing Account",
       "type": "object",
       "unevaluatedProperties": false,
       "allOf": [
@@ -62,13 +63,31 @@
       ]
     },
     {
+      "$id": "account-response",
+      "title": "Account Response",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "id": { "type": "integer" },
+            "uploads": { "type": "number" },
+            "transactions": { "type": "number" },
+            "total": { "type": "number" }
+          }
+        },
+        { "$ref": "account-base#" }
+      ]
+    },
+    {
       "$id": "category-base",
       "title": "Base Category",
       "type": "object",
       "properties": {
-        "name": { "type": "string" }
+        "name": { "type": "string" },
+        "color": { "type": "string" }
       },
-      "required": ["name"]
+      "required": ["name", "color"]
     },
     {
       "$id": "category-existing",

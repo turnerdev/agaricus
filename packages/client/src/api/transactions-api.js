@@ -2,7 +2,7 @@ const base = `${window.location.origin}/api`
 
 export async function getTransactions(params) {
   const url = new URL(`${base}/transactions`)
-  url.search = new URLSearchParams(params).toString();
+  url.search = new URLSearchParams(params).toString()
   return (await fetch(url)).json()
 }
 
@@ -13,13 +13,28 @@ export async function getTransaction(id) {
 
 export async function updateTransactions(records) {
   const url = new URL(`${base}/transactions`)
-  return await (await fetch(url, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8'
-    },
-    body: JSON.stringify(records)
-  })).text() // TODO
+  return await (
+    await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(records),
+    })
+  ).text() // TODO
+}
+
+export async function updateTransaction(record) {
+  const url = new URL(`${base}/transactions/${record.id}`)
+  return await (
+    await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify(record),
+    })
+  ).text() // TODO
 }
 
 export async function deleteTransactions() {

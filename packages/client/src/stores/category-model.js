@@ -4,32 +4,30 @@ import {
   getCategories,
   createCategory,
   updateCategory,
-  deleteCategory
-} from '../api/categories-api.js'
+  deleteCategory,
+} from '../api'
 
 const Category = {
   id: true,
   name: '',
-  row_number: 0,
+  color: '',
   [store.connect]: {
     get: getCategory,
-    set: async (id, values, keys) =>
-
+    set: async (id, values, _) => {
       if (values === null) {
-        await deleteAccount(id)
-        return null
+        await deleteCategory(id)
       } else if (isNaN(values.id)) {
-        const record = (({ id, ...props }) => props)(nValues)
-        await createAccount(record)
-        return null
+        // New, unsaved records will have an alphanumeric GUID
+        const record = (({ id, ...props }) => props)(values)
+        await createCategory(record)
       } else {
-        await updateAccount(nValues)
+        await updateCategory(values)
         return values
       }
-      createCategory({
-        name: values.name,
-      }),
+      return null
+    },
     list: getCategories,
   },
 }
 
+export default Category

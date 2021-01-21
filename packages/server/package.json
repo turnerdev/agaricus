@@ -5,30 +5,26 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "nodemon --experimental-json-modules",
+    "start": "npx nodemon --experimental-json-modules",
     "testold": "node --experimental-vm-modules node_modules/.bin/jest --coverage --watch",
-    "test": "node node_modules/.bin/jest --coverage --watch",
+    "test": "node_modules/.bin/jest --coverage --watch",
     "migrate": "npx knex migrate:up --esm"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*"
+    ]
   },
   "jest": {
     "transform": {
       "^.+\\.js$": "babel-jest"
     }
   },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-syntax-import-meta"
-    ]
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
   },
   "dependencies": {
     "@agaricus/core": "^1.0.0",
@@ -48,6 +44,7 @@
     "fastify-swagger": "^3.5.0",
     "jest": "^26.6.3",
     "jest-environment-node": "^26.6.2",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "script": "^0.1.4"
   }
 }

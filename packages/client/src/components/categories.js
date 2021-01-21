@@ -1,6 +1,6 @@
 import { html, dispatch, store } from 'hybrids'
 import style from 'bundle-text:../style.css'
-import Category from '../models/category-model'
+import Category from '../stores/category-model'
 
 function handleKeyDown(host, event) {
   if (event.code === 'Enter') {

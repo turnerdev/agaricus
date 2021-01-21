@@ -3,12 +3,8 @@ import fastifyMultipart from 'fastify-multipart'
 import fastifyWebSocket from 'fastify-websocket'
 import fastifySwagger from 'fastify-swagger'
 
-import diPlugin from './di-container.js'
 import schema from './schema.json'
-
-import transactionRoutes, { getTransactions, getTransaction, patchTransactions } from './routesold/transaction-handler.js'
-import { getUploads, uploadFiles } from './routesold/upload-handler.js'
-import { getCategories, postCategory } from './routesold/category-handler.js'
+import { querystringParser, diPlugin } from './utils/fastify.js'
 
 import TransactionRepository from './repository/transaction-repo.js'
 import TransactionDao from './dao/transaction-dao.js'
@@ -20,127 +16,82 @@ import UploadDao from './dao/upload-dao.js'
 import AccountRepository from './repository/account-repo.js'
 import AccountDao from './dao/account-dao.js'
 
-// import Database from './utils/database.js'
-import awilix from 'awilix'
-import knex from 'knex'
+import * as awilix from 'awilix' // IOC Container
+import knex from 'knex' // Database
 
 import fs from 'fs'
 
-const server = async (options) => {
-  const app = Fastify(options)
-  // const database = new Database('test')
-  // database.setup().catch(ex => console.warn('DB may already be setup', ex))
+const { asFunction, asClass, Lifetime } = awilix.default || awilix
+
+const server = async (options, filename) => {
+  const app = Fastify({
+    ...options,
+    querystringParser,
+  })
 
   // Register plugins
   await app.register(diPlugin)
   app.register(fastifyWebSocket)
   app.register(fastifyMultipart)
-  app.register(fastifySwagger, schema.swagger) 
+  app.register(fastifySwagger, schema.swagger)
 
-  // Register schemas
-  schema.shared.forEach(sharedSchema => app.addSchema(sharedSchema))
+  // Register JSON schemas
+  schema.shared.forEach((sharedSchema) => app.addSchema(sharedSchema))
 
   // Dependency injection container
   app.diContainer.register({
-    db: awilix.asFunction(() => knex({
+    db: asFunction(() => {
+      const db = knex({
         client: 'sqlite3',
-        connection: {
-          filename: "./data/dev.sqlite"
-        }
-      }))
-      // .disposer(async db => db.close())
-      .singleton()
+        useNullAsDefault: true,
+        connection: filename ? { filename } : ':memory:',
+        pool: {
+          afterCreate: (conn, cb) => conn.run('PRAGMA foreign_keys = ON', cb),
+        },
+      })
+      db.raw('PRAGMA foreign_keys = ON')
+      return db
+    }).singleton(),
   })
 
+  // Register classes in request scope
   app.addHook('onRequest', async (request, _) => {
     request.diScope.register({
-      transactionDao: awilix.asClass(TransactionDao, {
-        lifetime: awilix.Lifetime.SCOPED
+      transactionDao: asClass(TransactionDao, {
+        lifetime: Lifetime.SCOPED,
       }),
-      transactionRepository: awilix.asClass(TransactionRepository, {
-        lifetime: awilix.Lifetime.SCOPED
+      transactionRepository: asClass(TransactionRepository, {
+        lifetime: Lifetime.SCOPED,
       }),
-      transactionService: awilix.asClass(TransactionService, {
-        lifetime: awilix.Lifetime.SCOPED
+      transactionService: asClass(TransactionService, {
+        lifetime: Lifetime.SCOPED,
       }),
-      categoryDao: awilix.asClass(CategoryDao, {
-        lifetime: awilix.Lifetime.SCOPED
+      categoryDao: asClass(CategoryDao, {
+        lifetime: Lifetime.SCOPED,
       }),
-      categoryRepository: awilix.asClass(CategoryRepository, {
-        lifetime: awilix.Lifetime.SCOPED
+      categoryRepository: asClass(CategoryRepository, {
+        lifetime: Lifetime.SCOPED,
       }),
-      uploadDao: awilix.asClass(UploadDao, {
-        lifetime: awilix.Lifetime.SCOPED
+      uploadDao: asClass(UploadDao, {
+        lifetime: Lifetime.SCOPED,
       }),
-      uploadRepository: awilix.asClass(UploadRepository, {
-        lifetime: awilix.Lifetime.SCOPED
+      uploadRepository: asClass(UploadRepository, {
+        lifetime: Lifetime.SCOPED,
       }),
-      accountDao: awilix.asClass(AccountDao, {
-        lifetime: awilix.Lifetime.SCOPED
+      accountDao: asClass(AccountDao, {
+        lifetime: Lifetime.SCOPED,
       }),
-      accountRepository: awilix.asClass(AccountRepository, {
-        lifetime: awilix.Lifetime.SCOPED
-      })
+      accountRepository: asClass(AccountRepository, {
+        lifetime: Lifetime.SCOPED,
+      }),
     })
   })
-
-  // app.decorate('db', database)
-
-      // u: asFunction(
-      //   ({ userRepository }) => { return new UserService(userRepository, request.params.countryId) }, {
-      //   lifetime: Lifetime.SCOPED,
-      //   dispose: (module) => module.dispose(),
-      // }),
 
   // Register routes
   const routePath = './src/routes/'
   for await (let file of fs.readdirSync(routePath)) {
     await (await import(`./routes/${file}`)).default(app)
   }
-
-  // app.get('/transactionsold', {
-  //   schema: schema.getTransactions,
-  //   handler: getTransactions
-  // })
-
-  // app.patch('/transactionsold', {
-  //   schema: schema.patchTransactions,
-  //   handler: patchTransactions
-  // })
-  
-  // app.get('/transactionsold/:transactionId', {
-  //   schema: schema.getTransaction,
-  //   handler: getTransaction
-  // })
-
-  // app.get('/categories', {
-  //   schema: schema.getCategories,
-  //   handler: getCategories
-  // })
-
-  // app.post('/categories', {
-  //   schema: schema.postCategory,
-  //   handler: postCategory
-  // })
-
-  // app.get('/imports2', {
-  //   schema: schema.getUploads,
-  //   handler: getUploads
-  // })
-
-  // app.post('/upload2', {
-  //   schema: schema.uploadFiles,
-  //   handler: uploadFiles
-  // })
-
-  // app.get('/wstest', { websocket: true }, function (connection, req) {
-  //   console.log('connection established')
-  //   connection.socket.on('message', message => {
-  //     // message === 'hi from cli
-  //     console.log('received message', message)
-  //     connection.socket.send('hi from server')
-  //   })
-  // })
 
   return app
 }
