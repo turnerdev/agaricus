@@ -27,7 +27,6 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@agaricus/core": "^1.0.0",
     "awilix": "^4.3.1",
     "csv-parse": "^4.14.1",
     "fastify": "^3.9.1",
